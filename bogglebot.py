@@ -21,9 +21,14 @@ def read_board():
     line_num = 1
     for line in range(board_size):
         input_prompt = "Please input line " + str(line_num) \
-                       + " of the board, separated by a comma,lowercase: "
+                       + " of the board, no spaces, use Q for qu, otherwise lowercase: "
         board_line = input(input_prompt)
-        line_list = board_line.split(',')
+        line_list = []
+        for letter in board_line:
+            if letter == "Q":
+                line_list.append("qu")
+            else:
+                line_list.append(letter)
         board_list.append(line_list)
         line_num += 1
     return board_list
