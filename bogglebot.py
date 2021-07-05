@@ -36,27 +36,28 @@ def word_finder(board_list, word_list, index_dictionary):
         for x in range(len(board_list[y])):
             current_prefix = board_list[y][x]
             trace = []
-            neighbors = find_neighbors((x, y), board_list)
-            recursive_parser(neighbors, board_list, trace, current_prefix, (x, y), word_list, index_dictionary)
+            recursive_parser(board_list, trace, current_prefix, (x, y), word_list, index_dictionary)
 
 
-def recursive_parser(queue, board_list, current_trace, current_prefix, current_coords, word_list, index_dictionary):
+def recursive_parser(board_list, current_trace, current_prefix, current_coords, word_list, index_dictionary):
     global RESULT_LIST
-    x, y = current_coords
-    current_prefix = current_prefix + board_list[y][x]
-    current_trace.append(current_coords)
-    print(current_prefix,current_coords, queue, current_trace) #####DEBUG#####
     if not prefix_in_dict(current_prefix, word_list, index_dictionary):
         return
-    if prefix_is_word(current_prefix, word_list, index_dictionary):
-        RESULT_LIST.append(current_prefix)
+    current_trace.append(current_coords)
+    queue = []
     neighbors = find_neighbors(current_coords, board_list)
     for coord in neighbors:
         if coord not in current_trace:
             queue.append(coord)
+    #print(current_prefix, current_coords, queue, current_trace)  #####DEBUG#####
+    if prefix_is_word(current_prefix, word_list, index_dictionary) and current_prefix not in RESULT_LIST:
+        RESULT_LIST.append(current_prefix)
     while queue:
         succ_coord = queue.pop()
-        recursive_parser(queue, board_list, current_trace, current_prefix, succ_coord, word_list, index_dictionary)
+        x, y = succ_coord
+        next_prefix = current_prefix + board_list[y][x]
+        recursive_parser(board_list, current_trace, next_prefix, succ_coord, word_list, index_dictionary)
+    current_trace.remove(current_coords)
     return
 
 
